@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WaffleSMP Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">WaffleSMP Staff</p>
+          <h1>Admin dashboard</h1>
+        </div>
+        <a class="ghost-button button-link" href="./index.html">Back to store</a>
+      </header>
+
+      <main class="admin-layout">
+        <section class="card">
+          <p class="eyebrow">Secure Access</p>
+          <h3>Admin login</h3>
+          <div class="status-banner hidden" id="admin-status-banner"></div>
+          <form id="admin-login-form" class="stack-form">
+            <label>
+              Username
+              <input type="text" name="username" required />
+            </label>
+            <label>
+              Password
+              <input type="password" name="password" required />
+            </label>
+            <button class="primary-button" type="submit">Login</button>
+          </form>
+          <p class="form-message" id="admin-login-message"></p>
+        </section>
+
+        <section class="dashboard-shell hidden" id="dashboard-shell">
+          <div class="stats-grid" id="stats-grid"></div>
+
+          <section class="card">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Gem Orders</p>
+                <h3>Pending payment confirmations</h3>
+              </div>
+              <button class="ghost-button small" id="refresh-dashboard-top">Refresh</button>
+            </div>
+            <div id="gem-orders-list" class="data-list empty-state">No gem orders yet.</div>
+          </section>
+
+          <section class="card">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Rank Orders</p>
+                <h3>Approvals waiting for staff</h3>
+              </div>
+            </div>
+            <div id="rank-orders-list" class="data-list empty-state">No rank orders yet.</div>
+          </section>
+
+          <section class="card">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Accounts</p>
+                <h3>Players and contact info</h3>
+              </div>
+            </div>
+            <div id="accounts-list" class="data-list empty-state">No accounts yet.</div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="./admin.js"></script>
+  </body>
+  </html>

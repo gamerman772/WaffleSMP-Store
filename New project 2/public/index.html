@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WaffleSMP Store</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">WaffleSMP</p>
+          <h1>Ranks, gems, and account delivery built around your server.</h1>
+        </div>
+        <div class="topbar-actions">
+          <button class="ghost-button" id="open-login">Login</button>
+          <button class="primary-button" id="open-gem-order">Buy Gems</button>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero card">
+          <div class="hero-copy">
+            <p class="eyebrow">Clean. Professional. Fast.</p>
+            <h2>Power up your WaffleSMP account with gems, then unlock ranks.</h2>
+            <p>
+              100 gems = $1. Order gems, wait for the PayPal email, then spend those gems on server
+              ranks once your payment is approved.
+            </p>
+            <div class="hero-actions">
+              <button class="primary-button" id="hero-buy-gems">Order Gems</button>
+              <button class="ghost-button" id="hero-view-account">View Account</button>
+            </div>
+          </div>
+          <div class="hero-panel">
+            <div class="stat-chip">
+              <span>Gem rate</span>
+              <strong>100 gems = $1</strong>
+            </div>
+            <div class="stat-chip">
+              <span>Rank delivery</span>
+              <strong>Within 24 hours after verification</strong>
+            </div>
+            <div class="stat-chip">
+              <span>Gem order reply</span>
+              <strong>PayPal email within 48 hours</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="account-grid">
+          <article class="card account-card">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Player Account</p>
+                <h3>Your balance and order status</h3>
+              </div>
+              <button class="ghost-button small" id="refresh-account">Refresh</button>
+            </div>
+            <div class="status-banner hidden" id="store-status-banner"></div>
+            <div id="account-summary" class="account-summary empty-state">
+              Log in or create an account through a gem order to see your gem balance here.
+            </div>
+            <div class="inline-actions">
+              <button class="primary-button small" id="account-buy-gems">Buy More Gems</button>
+              <button class="ghost-button small" id="account-login">Login</button>
+            </div>
+          </article>
+
+          <article class="card how-card">
+            <p class="eyebrow">How It Works</p>
+            <h3>The full WaffleSMP order flow</h3>
+            <ol>
+              <li>Create your account while ordering gems.</li>
+              <li>Wait up to 48 hours for an email with the PayPal address and total.</li>
+              <li>After payment is confirmed, gems are added to your website account.</li>
+              <li>Use your gems to buy a rank and send the Minecraft username.</li>
+              <li>Rank delivery is marked pending until staff approves it.</li>
+            </ol>
+          </article>
+        </section>
+
+        <section class="store-section">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Ranks</p>
+              <h3>Choose your WaffleSMP upgrade</h3>
+            </div>
+          </div>
+          <div class="rank-grid" id="rank-grid"></div>
+        </section>
+
+        <section class="store-section">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Admin</p>
+              <h3>Server staff access</h3>
+            </div>
+            <a class="text-link" href="./admin.html">Open admin dashboard</a>
+          </div>
+          <div class="card admin-note">
+            Use the admin login when you need to approve gem payments, review rank requests, and see
+            the emails that still need replies.
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="modal hidden" id="auth-modal">
+      <div class="modal-card">
+        <button class="close-button" data-close="auth-modal">×</button>
+        <p class="eyebrow">Account Login</p>
+        <h3>Sign into your WaffleSMP account</h3>
+        <form id="login-form" class="stack-form">
+          <label>
+            Username
+            <input type="text" name="username" required />
+          </label>
+          <label>
+            Password
+            <input type="password" name="password" required />
+          </label>
+          <button class="primary-button" type="submit">Login</button>
+        </form>
+        <p class="helper-text">Need staff access instead? <a href="./admin.html">Open admin login</a>.</p>
+        <p class="form-message" id="login-message"></p>
+      </div>
+    </div>
+
+    <div class="modal hidden" id="gems-modal">
+      <div class="modal-card">
+        <button class="close-button" data-close="gems-modal">×</button>
+        <p class="eyebrow">Gem Checkout</p>
+        <h3 id="gems-modal-title">Create your account and order gems</h3>
+        <form id="gems-form" class="stack-form">
+          <div id="signup-fields">
+            <label>
+              Email
+              <input type="email" name="email" required />
+            </label>
+            <label>
+              Username
+              <input type="text" name="username" required />
+            </label>
+            <label>
+              Password
+              <input type="password" name="password" minlength="6" required />
+            </label>
+          </div>
+          <label>
+            Gems
+            <input type="number" name="gems" min="100" step="100" value="300" required />
+          </label>
+          <p class="cost-preview" id="gems-cost-preview">$3.00 total</p>
+          <button class="primary-button" type="submit">Submit Gem Order</button>
+        </form>
+        <p class="helper-text">
+          After you order, you will get an email within 48 hours with the PayPal address and total.
+        </p>
+        <p class="form-message" id="gems-message"></p>
+      </div>
+    </div>
+
+    <div class="modal hidden" id="rank-modal">
+      <div class="modal-card">
+        <button class="close-button" data-close="rank-modal">×</button>
+        <p class="eyebrow">Rank Purchase</p>
+        <h3 id="rank-modal-title">Buy rank</h3>
+        <form id="rank-form" class="stack-form">
+          <input type="hidden" name="rankId" />
+          <label>
+            Minecraft Username
+            <input type="text" name="minecraftUsername" required />
+          </label>
+          <label>
+            Edition
+            <select name="edition" required>
+              <option value="java">Java</option>
+              <option value="bedrock">Bedrock</option>
+            </select>
+          </label>
+          <button class="primary-button" type="submit">Submit Rank Request</button>
+        </form>
+        <p class="helper-text">
+          Your gems are used right away, then the order stays in verification until staff approves it.
+        </p>
+        <p class="form-message" id="rank-message"></p>
+      </div>
+    </div>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+  </html>
