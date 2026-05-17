@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WaffleSMP Store</title>
+    <style>
+      :root {
+        --bg: #f4efe7;
+        --panel: rgba(255, 252, 246, 0.92);
+        --panel-strong: #fffaf0;
+        --ink: #172126;
+        --muted: #5f676d;
+        --accent: #d8892b;
+        --accent-dark: #8f5310;
+        --line: rgba(23, 33, 38, 0.12);
+        --shadow: 0 20px 60px rgba(78, 52, 19, 0.14);
+        --success: #20755a;
+        --warning: #9e650e;
+        --danger: #ab2a1f;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background:
+          radial-gradient(circle at top left, rgba(216, 137, 43, 0.22), transparent 24%),
+          radial-gradient(circle at bottom right, rgba(111, 71, 22, 0.12), transparent 20%),
+          linear-gradient(180deg, #efe6d6 0%, #f7f1e8 45%, #f3ece1 100%);
+        min-height: 100vh;
+      }
+
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+
+      .page-shell {
+        width: min(1160px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 24px 0 48px;
+      }
+
+      .topbar,
+      .section-heading,
+      .hero,
+      .account-grid,
+      .stats-grid,
+      .inline-actions,
+      .topbar-actions,
+      .hero-actions {
+        display: flex;
+        gap: 16px;
+      }
+
+      .topbar,
+      .section-heading {
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .topbar {
+        margin-bottom: 24px;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+      }
+
+      h1 {
+        max-width: 760px;
+        font-size: clamp(2.2rem, 4vw, 4.5rem);
+        line-height: 0.98;
+      }
+
+      h2 {
+        font-size: clamp(2rem, 3vw, 3rem);
+        line-height: 1.03;
+      }
+
+      h3 {
+        font-size: 1.35rem;
+      }
+
+      p {
+        margin: 0;
+        line-height: 1.65;
+      }
+
+      .eyebrow {
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        font-size: 0.78rem;
+        color: var(--accent-dark);
+        font-weight: 800;
+      }
+
+      .card,
+      .modal-card,
+      .stat-card {
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        background: var(--panel);
+        box-shadow: var(--shadow);
+      }
+
+      .card {
+        padding: 28px;
+      }
+
+      .hero {
+        padding: 34px;
+        align-items: stretch;
+        justify-content: space-between;
+      }
+
+      .hero-copy,
+      .hero-panel,
+      .account-card,
+      .how-card,
+      .dashboard-shell,
+      .stack-form,
+      .data-card {
+        display: grid;
+        gap: 18px;
+      }
+
+      .hero-copy {
+        max-width: 640px;
+      }
+
+      .hero-panel {
+        width: min(340px, 100%);
+      }
+
+      .stat-chip,
+      .stat-card,
+      .data-card,
+      .account-tile {
+        padding: 18px;
+        border-radius: 22px;
+        background: var(--panel-strong);
+        border: 1px solid rgba(143, 83, 16, 0.14);
+      }
+
+      .account-grid {
+        margin-top: 24px;
+        align-items: stretch;
+      }
+
+      .account-grid > * {
+        flex: 1;
+      }
+
+      .store-section {
+        margin-top: 28px;
+      }
+
+      .rank-grid,
+      .stats-grid {
+        display: grid;
+        gap: 18px;
+      }
+
+      .rank-grid {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        margin-top: 18px;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      }
+
+      .rank-card {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .rank-card::after {
+        content: "";
+        position: absolute;
+        inset: auto -40px -70px auto;
+        width: 140px;
+        height: 140px;
+        border-radius: 999px;
+        background: radial-gradient(circle, rgba(216, 137, 43, 0.2), transparent 70%);
+      }
+
+      .price-tag {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 2rem;
+        font-weight: 700;
+      }
+
+      .feature-list,
+      ol {
+        display: grid;
+        gap: 10px;
+        padding-left: 20px;
+        color: var(--muted);
+      }
+
+      .primary-button,
+      .ghost-button {
+        border-radius: 999px;
+        padding: 13px 18px;
+        border: 1px solid transparent;
+        cursor: pointer;
+        transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+      }
+
+      .primary-button {
+        background: linear-gradient(135deg, #db932f 0%, #c27221 100%);
+        color: white;
+        font-weight: 700;
+      }
+
+      .ghost-button {
+        background: rgba(255, 250, 240, 0.65);
+        color: var(--ink);
+        border-color: var(--line);
+      }
+
+      .primary-button:hover,
+      .ghost-button:hover {
+        transform: translateY(-1px);
+      }
+
+      .small {
+        padding: 10px 14px;
+        font-size: 0.92rem;
+      }
+
+      .button-disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+        transform: none !important;
+      }
+
+      .inline-actions,
+      .topbar-actions,
+      .hero-actions {
+        flex-wrap: wrap;
+      }
+
+      .account-summary,
+      .data-list {
+        display: grid;
+        gap: 14px;
+      }
+
+      .empty-state {
+        color: var(--muted);
+        min-height: 60px;
+        align-content: center;
+      }
+
+      .account-balance {
+        font-size: 2.2rem;
+        font-family: Georgia, "Times New Roman", serif;
+      }
+
+      .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(216, 137, 43, 0.12);
+        font-size: 0.9rem;
+        width: fit-content;
+      }
+
+      .status-approved {
+        background: rgba(32, 117, 90, 0.12);
+        color: var(--success);
+      }
+
+      .status-pending {
+        background: rgba(158, 101, 14, 0.14);
+        color: var(--warning);
+      }
+
+      .status-banner {
+        padding: 14px 16px;
+        border-radius: 18px;
+        border: 1px solid rgba(158, 101, 14, 0.18);
+        background: rgba(158, 101, 14, 0.12);
+        color: var(--warning);
+        font-weight: 600;
+      }
+
+      .modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(23, 33, 38, 0.45);
+        display: grid;
+        place-items: center;
+        padding: 20px;
+        z-index: 20;
+      }
+
+      .modal-card {
+        position: relative;
+        width: min(520px, 100%);
+        padding: 28px;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      .close-button {
+        position: absolute;
+        top: 18px;
+        right: 18px;
+        width: 38px;
+        height: 38px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: rgba(255, 250, 240, 0.85);
+        cursor: pointer;
+      }
+
+      label {
+        display: grid;
+        gap: 8px;
+        font-weight: 600;
+      }
+
+      input,
+      select {
+        width: 100%;
+        padding: 13px 14px;
+        border: 1px solid rgba(23, 33, 38, 0.16);
+        border-radius: 16px;
+        background: rgba(255, 252, 246, 0.92);
+      }
+
+      .cost-preview,
+      .helper-text,
+      .mini-label {
+        color: var(--muted);
+      }
+
+      .admin-shell {
+        margin-top: 18px;
+      }
+
+      .data-card {
+        gap: 10px;
+      }
+
+      .data-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      @media (max-width: 860px) {
+        .topbar,
+        .hero,
+        .account-grid,
+        .section-heading {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .page-shell {
+          width: min(100% - 20px, 1160px);
+          padding-top: 18px;
+        }
+
+        .hero,
+        .card,
+        .modal-card {
+          padding: 22px;
+          border-radius: 24px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">WaffleSMP</p>
+          <h1>Ranks, gems, and account delivery built around your server.</h1>
+        </div>
+        <div class="topbar-actions">
+          <button class="ghost-button" id="open-login">Login</button>
+          <button class="primary-button" id="open-gem-order">Buy Gems</button>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero card">
+          <div class="hero-copy">
+            <p class="eyebrow">Clean. Professional. Fast.</p>
+            <h2>Power up your WaffleSMP account with gems, then unlock ranks.</h2>
+            <p>
+              100 gems = $1. Order gems, wait for the PayPal email, then spend those gems on server
+              ranks once your payment is approved.
+            </p>
+            <div class="hero-actions">
+              <button class="primary-button" id="hero-buy-gems">Order Gems</button>
+              <button class="ghost-button" id="hero-view-account">View Account</button>
+            </div>
+          </div>
+          <div class="hero-panel">
+            <div class="stat-chip">
+              <span>Gem rate</span>
+              <strong>100 gems = $1</strong>
+            </div>
+            <div class="stat-chip">
+              <span>Rank delivery</span>
+              <strong>Within 24 hours after verification</strong>
+            </div>
+            <div class="stat-chip">
+              <span>Gem order reply</span>
+              <strong>PayPal email within 48 hours</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="account-grid">
+          <article class="card account-card">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Player Account</p>
+                <h3>Your balance and order status</h3>
+              </div>
+              <button class="ghost-button small" id="refresh-account">Refresh</button>
+            </div>
+            <div class="status-banner" id="store-status-banner">
+              GitHub Pages mode: to buy, send an email to drdonutiskool@gmail.com with the name of the rank you want.
+            </div>
+            <div id="account-summary" class="account-summary empty-state">
+              This single-file version saves account info only in this browser.
+            </div>
+            <div class="inline-actions">
+              <button class="primary-button small" id="account-buy-gems">Buy More Gems</button>
+              <button class="ghost-button small" id="account-login">Login</button>
+            </div>
+          </article>
+
+          <article class="card how-card">
+            <p class="eyebrow">How It Works</p>
+            <h3>The full WaffleSMP order flow</h3>
+            <ol>
+              <li>Create your account while ordering gems.</li>
+              <li>Wait up to 48 hours for an email with the PayPal address and total.</li>
+              <li>After payment is confirmed, gems are added to your website account.</li>
+              <li>Use your gems to buy a rank and send the Minecraft username.</li>
+              <li>If checkout is offline, email `drdonutiskool@gmail.com` with the rank name you want.</li>
+            </ol>
+          </article>
+        </section>
+
+        <section class="store-section">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Ranks</p>
+              <h3>Choose your WaffleSMP upgrade</h3>
+            </div>
+          </div>
+          <div class="rank-grid" id="rank-grid"></div>
+        </section>
+
+        <section class="store-section">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Admin</p>
+              <h3>Browser-only admin view</h3>
+            </div>
+            <button class="ghost-button small" id="toggle-admin">Open Admin Panel</button>
+          </div>
+          <div class="card admin-shell hidden" id="admin-shell">
+            <div class="status-banner" id="admin-status-banner">
+              This GitHub Pages version saves admin/account info only in this browser.
+            </div>
+            <form id="admin-login-form" class="stack-form">
+              <label>
+                Username
+                <input type="text" name="username" required />
+              </label>
+              <label>
+                Password
+                <input type="password" name="password" required />
+              </label>
+              <button class="primary-button" type="submit">Login</button>
+            </form>
+            <p class="helper-text" id="admin-login-message"></p>
+            <div class="dashboard-shell hidden" id="dashboard-shell">
+              <div class="stats-grid" id="stats-grid"></div>
+              <section class="card">
+                <p class="eyebrow">Gem Orders</p>
+                <div id="gem-orders-list" class="data-list empty-state">No gem orders yet.</div>
+              </section>
+              <section class="card">
+                <p class="eyebrow">Rank Orders</p>
+                <div id="rank-orders-list" class="data-list empty-state">No rank orders yet.</div>
+              </section>
+              <section class="card">
+                <p class="eyebrow">Accounts</p>
+                <div id="accounts-list" class="data-list empty-state">No accounts yet.</div>
+              </section>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="modal hidden" id="auth-modal">
+      <div class="modal-card">
+        <button class="close-button" data-close="auth-modal">×</button>
+        <p class="eyebrow">Account Login</p>
+        <h3>Sign into your WaffleSMP account</h3>
+        <form id="login-form" class="stack-form">
+          <label>
+            Username
+            <input type="text" name="username" required />
+          </label>
+          <label>
+            Password
+            <input type="password" name="password" required />
+          </label>
+          <button class="primary-button" type="submit">Login</button>
+        </form>
+        <p class="form-message" id="login-message"></p>
+      </div>
+    </div>
+
+    <div class="modal hidden" id="gems-modal">
+      <div class="modal-card">
+        <button class="close-button" data-close="gems-modal">×</button>
+        <p class="eyebrow">Gem Checkout</p>
+        <h3>Create your account and order gems</h3>
+        <form id="gems-form" class="stack-form">
+          <div id="signup-fields">
+            <label>
+              Email
+              <input type="email" name="email" required />
+            </label>
+            <label>
+              Username
+              <input type="text" name="username" required />
+            </label>
+            <label>
+              Password
+              <input type="password" name="password" minlength="6" required />
+            </label>
+          </div>
+          <label>
+            Gems
+            <input type="number" name="gems" min="100" step="100" value="300" required />
+          </label>
+          <p class="cost-preview" id="gems-cost-preview">$3.00 total</p>
+          <button class="primary-button" type="submit">Submit Gem Order</button>
+        </form>
+        <p class="helper-text">
+          This single-file version stores data in this browser only. For live orders, use the email fallback above.
+        </p>
+        <p class="form-message" id="gems-message"></p>
+      </div>
+    </div>
+
+    <div class="modal hidden" id="rank-modal">
+      <div class="modal-card">
+        <button class="close-button" data-close="rank-modal">×</button>
+        <p class="eyebrow">Rank Purchase</p>
+        <h3 id="rank-modal-title">Buy rank</h3>
+        <form id="rank-form" class="stack-form">
+          <input type="hidden" name="rankId" />
+          <label>
+            Minecraft Username
+            <input type="text" name="minecraftUsername" required />
+          </label>
+          <label>
+            Edition
+            <select name="edition" required>
+              <option value="java">Java</option>
+              <option value="bedrock">Bedrock</option>
+            </select>
+          </label>
+          <button class="primary-button" type="submit">Submit Rank Request</button>
+        </form>
+        <p class="form-message" id="rank-message"></p>
+      </div>
+    </div>
+
+    <script>
+      const ADMIN_USERNAME = "COOLMAN155";
+      const ADMIN_PASSWORD = "8675309b";
+      const STORAGE_KEY = "wafflesmp_single_file_db";
+      const TOKEN_KEY = "waffle_single_file_token";
+      const ADMIN_TOKEN_KEY = "waffle_single_file_admin_token";
+      const RANKS = [
+        { id: "member", name: "Member", priceUsd: 0, gemCost: 0, homes: 2, marketSlots: 5, priorityQueue: false, shopCashMultiplier: 1 },
+        { id: "vip", name: "VIP", priceUsd: 3, gemCost: 300, homes: 4, marketSlots: 11, priorityQueue: false, shopCashMultiplier: 1 },
+        { id: "vipPlus", name: "VIP+", priceUsd: 5, gemCost: 500, homes: 5, marketSlots: 16, priorityQueue: true, shopCashMultiplier: 1 },
+        { id: "wafflelord", name: "Wafflelord", priceUsd: 8, gemCost: 800, homes: 6, marketSlots: 20, priorityQueue: true, shopCashMultiplier: 1.25 }
+      ];
+      const state = {
+        token: localStorage.getItem(TOKEN_KEY) || "",
+        adminToken: localStorage.getItem(ADMIN_TOKEN_KEY) || "",
+        selectedRank: null
+      };
+      const currency = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
+
+      function emptyDb() {
+        return { accounts: [], gemOrders: [], rankOrders: [], sessions: [], adminSessions: [] };
+      }
+
+      function loadDb() {
+        try {
+          return JSON.parse(localStorage.getItem(STORAGE_KEY) || JSON.stringify(emptyDb()));
+        } catch {
+          return emptyDb();
+        }
+      }
+
+      function saveDb(db) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+      }
+
+      function makeId(prefix) {
+        return `${prefix}_${Math.random().toString(36).slice(2, 12)}`;
+      }
+
+      function openModal(id) {
+        document.getElementById(id).classList.remove("hidden");
+      }
+
+      function closeModal(id) {
+        document.getElementById(id).classList.add("hidden");
+      }
+
+      function setMessage(id, text, error = false) {
+        const el = document.getElementById(id);
+        el.textContent = text;
+        el.style.color = error ? "var(--danger)" : "var(--success)";
+      }
+
+      function currentAccount() {
+        const db = loadDb();
+        const session = db.sessions.find((entry) => entry.token === state.token);
+        return session ? db.accounts.find((entry) => entry.id === session.accountId) : null;
+      }
+
+      function currentAdmin() {
+        const db = loadDb();
+        return db.adminSessions.find((entry) => entry.token === state.adminToken);
+      }
+
+      function renderRanks() {
+        const container = document.getElementById("rank-grid");
+        container.innerHTML = "";
+        for (const rank of RANKS) {
+          const card = document.createElement("article");
+          card.className = "card rank-card";
+          card.innerHTML = `
+            <p class="eyebrow">${rank.name}</p>
+            <div class="price-tag">${rank.priceUsd === 0 ? "$0" : currency.format(rank.priceUsd)}</div>
+            <p class="mini-label">${rank.id === "member" ? "Included automatically" : `${rank.gemCost} gems`}</p>
+            <div class="status-pill ${rank.id === "member" ? "status-approved" : "status-pending"}">${rank.id === "member" ? "Baseline rank" : "Gem checkout"}</div>
+            <ul class="feature-list">
+              <li>${rank.homes} homes</li>
+              <li>${rank.marketSlots} market slots</li>
+              <li>${rank.priorityQueue ? "Priority queue" : "Standard queue access"}</li>
+              <li>${rank.shopCashMultiplier > 1 ? `Shop cash ${rank.shopCashMultiplier}x` : "Standard shop cash"}</li>
+            </ul>
+            ${rank.id === "member" ? `<button class="ghost-button" disabled>Member is free</button>` : `<button class="primary-button" data-rank-buy="${rank.id}">Buy ${rank.name}</button>`}
+          `;
+          container.appendChild(card);
+        }
+
+        container.querySelectorAll("[data-rank-buy]").forEach((button) => {
+          button.addEventListener("click", () => {
+            const rankId = button.getAttribute("data-rank-buy");
+            state.selectedRank = RANKS.find((rank) => rank.id === rankId);
+            if (!state.token) {
+              setMessage("rank-message", "Log in first so we know which gem balance to use.", true);
+              openModal("auth-modal");
+              return;
+            }
+            document.querySelector('#rank-form [name="rankId"]').value = rankId;
+            document.getElementById("rank-modal-title").textContent = `Buy ${state.selectedRank.name} for ${state.selectedRank.gemCost} gems`;
+            openModal("rank-modal");
+          });
+        });
+      }
+
+      function renderAccount() {
+        const db = loadDb();
+        const account = currentAccount();
+        const target = document.getElementById("account-summary");
+
+        if (!account) {
+          target.className = "account-summary empty-state";
+          target.textContent = "This single-file version saves account info only in this browser.";
+          return;
+        }
+
+        const gemOrders = db.gemOrders.filter((order) => order.accountId === account.id).reverse();
+        const rankOrders = db.rankOrders.filter((order) => order.accountId === account.id).reverse();
+
+        target.className = "account-summary";
+        target.innerHTML = `
+          <div class="account-tile">
+            <p class="mini-label">Logged in as ${account.username}</p>
+            <div class="account-balance">${account.gemsBalance} gems</div>
+            <p>${account.email}</p>
+            <p class="helper-text">Saved in this browser only.</p>
+          </div>
+          <div class="account-tile">
+            <p class="mini-label">Gem orders</p>
+            ${gemOrders.length ? gemOrders.map((order) => `
+              <div class="account-tile">
+                <div class="data-row"><strong>${order.gems} gems</strong><span>${currency.format(order.amountUsd)}</span></div>
+                <div class="data-row"><span>${new Date(order.createdAt).toLocaleString()}</span><span class="status-pill ${order.status === "approved" ? "status-approved" : "status-pending"}">${order.status}</span></div>
+              </div>
+            `).join("") : "<div class='account-tile'>No gem orders yet.</div>"}
+          </div>
+          <div class="account-tile">
+            <p class="mini-label">Rank requests</p>
+            ${rankOrders.length ? rankOrders.map((order) => `
+              <div class="account-tile">
+                <div class="data-row"><strong>${order.rankName}</strong><span>${order.gemCost} gems</span></div>
+                <div class="data-row"><span>${order.minecraftUsername} · ${order.edition}</span><span class="status-pill ${order.status === "approved" ? "status-approved" : "status-pending"}">${order.status}</span></div>
+              </div>
+            `).join("") : "<div class='account-tile'>No rank requests yet.</div>"}
+          </div>
+        `;
+      }
+
+      function renderAdmin() {
+        const db = loadDb();
+        const shell = document.getElementById("dashboard-shell");
+        if (!currentAdmin()) {
+          shell.classList.add("hidden");
+          return;
+        }
+
+        shell.classList.remove("hidden");
+        document.getElementById("stats-grid").innerHTML = `
+          <article class="stat-card"><p class="mini-label">Revenue</p><h3>${currency.format(db.gemOrders.filter((order) => order.status === "approved").reduce((sum, order) => sum + order.amountUsd, 0))}</h3></article>
+          <article class="stat-card"><p class="mini-label">Accounts</p><h3>${db.accounts.length}</h3></article>
+          <article class="stat-card"><p class="mini-label">Pending gems</p><h3>${db.gemOrders.filter((order) => order.status === "pending").length}</h3></article>
+          <article class="stat-card"><p class="mini-label">Pending ranks</p><h3>${db.rankOrders.filter((order) => order.status === "pending").length}</h3></article>
+        `;
+
+        document.getElementById("gem-orders-list").innerHTML = db.gemOrders.length
+          ? db.gemOrders.slice().reverse().map((order) => {
+              const account = db.accounts.find((entry) => entry.id === order.accountId);
+              return `
+                <article class="data-card">
+                  <div class="data-row"><strong>${account ? account.username : "Unknown"}</strong><span>${currency.format(order.amountUsd)}</span></div>
+                  <div class="data-row"><span>${account ? account.email : ""}</span><span>${order.gems} gems</span></div>
+                  <div class="data-row">
+                    <span class="status-pill ${order.status === "approved" ? "status-approved" : "status-pending"}">${order.status}</span>
+                    ${order.status === "pending" ? `<button class="primary-button small" data-approve-gem="${order.id}">Approve payment</button>` : `<span>${new Date(order.approvedAt).toLocaleString()}</span>`}
+                  </div>
+                </article>
+              `;
+            }).join("")
+          : "No gem orders yet.";
+
+        document.getElementById("rank-orders-list").innerHTML = db.rankOrders.length
+          ? db.rankOrders.slice().reverse().map((order) => {
+              const account = db.accounts.find((entry) => entry.id === order.accountId);
+              return `
+                <article class="data-card">
+                  <div class="data-row"><strong>${order.rankName}</strong><span>${order.gemCost} gems</span></div>
+                  <div class="data-row"><span>${account ? account.username : "Unknown"}</span><span>${order.minecraftUsername} · ${order.edition}</span></div>
+                  <div class="data-row">
+                    <span class="status-pill ${order.status === "approved" ? "status-approved" : "status-pending"}">${order.status}</span>
+                    ${order.status === "pending" ? `<button class="primary-button small" data-approve-rank="${order.id}">Approve rank</button>` : `<span>${new Date(order.approvedAt).toLocaleString()}</span>`}
+                  </div>
+                </article>
+              `;
+            }).join("")
+          : "No rank orders yet.";
+
+        document.getElementById("accounts-list").innerHTML = db.accounts.length
+          ? db.accounts.slice().reverse().map((account) => `
+              <article class="data-card">
+                <div class="data-row"><strong>${account.username}</strong><span>${account.gemsBalance} gems</span></div>
+                <div class="data-row"><span>${account.email}</span><span>${new Date(account.createdAt).toLocaleString()}</span></div>
+              </article>
+            `).join("")
+          : "No accounts yet.";
+
+        document.querySelectorAll("[data-approve-gem]").forEach((button) => {
+          button.addEventListener("click", () => {
+            const orderId = button.getAttribute("data-approve-gem");
+            const freshDb = loadDb();
+            const order = freshDb.gemOrders.find((entry) => entry.id === orderId);
+            const account = freshDb.accounts.find((entry) => entry.id === order.accountId);
+            if (order && account && order.status !== "approved") {
+              order.status = "approved";
+              order.approvedAt = new Date().toISOString();
+              account.gemsBalance += order.gems;
+              saveDb(freshDb);
+              renderAccount();
+              renderAdmin();
+            }
+          });
+        });
+
+        document.querySelectorAll("[data-approve-rank]").forEach((button) => {
+          button.addEventListener("click", () => {
+            const orderId = button.getAttribute("data-approve-rank");
+            const freshDb = loadDb();
+            const order = freshDb.rankOrders.find((entry) => entry.id === orderId);
+            if (order && order.status !== "approved") {
+              order.status = "approved";
+              order.approvedAt = new Date().toISOString();
+              saveDb(freshDb);
+              renderAdmin();
+            }
+          });
+        });
+      }
+
+      function setup() {
+        renderRanks();
+        renderAccount();
+        renderAdmin();
+
+        ["open-login", "account-login"].forEach((id) => {
+          document.getElementById(id).addEventListener("click", () => openModal("auth-modal"));
+        });
+
+        ["open-gem-order", "hero-buy-gems", "account-buy-gems"].forEach((id) => {
+          document.getElementById(id).addEventListener("click", () => {
+            const signedIn = Boolean(state.token);
+            document.getElementById("signup-fields").classList.toggle("hidden", signedIn);
+            openModal("gems-modal");
+          });
+        });
+
+        document.getElementById("hero-view-account").addEventListener("click", () => {
+          document.getElementById("account-summary").scrollIntoView({ behavior: "smooth", block: "center" });
+        });
+
+        document.getElementById("refresh-account").addEventListener("click", renderAccount);
+        document.getElementById("toggle-admin").addEventListener("click", () => {
+          document.getElementById("admin-shell").classList.toggle("hidden");
+        });
+
+        document.querySelectorAll("[data-close]").forEach((button) => {
+          button.addEventListener("click", () => closeModal(button.getAttribute("data-close")));
+        });
+
+        const gemsInput = document.querySelector('#gems-form [name="gems"]');
+        const previewCost = () => {
+          document.getElementById("gems-cost-preview").textContent = `${currency.format((Number(gemsInput.value || 0) / 100))} total`;
+        };
+        gemsInput.addEventListener("input", previewCost);
+        previewCost();
+
+        document.getElementById("login-form").addEventListener("submit", (event) => {
+          event.preventDefault();
+          const form = new FormData(event.currentTarget);
+          const db = loadDb();
+          const username = String(form.get("username") || "").trim().toLowerCase();
+          const password = String(form.get("password") || "");
+          const account = db.accounts.find((entry) => entry.username.toLowerCase() === username);
+          if (!account || account.password !== password) {
+            setMessage("login-message", "Invalid username or password.", true);
+            return;
+          }
+          state.token = makeId("user");
+          db.sessions.push({ token: state.token, accountId: account.id });
+          saveDb(db);
+          localStorage.setItem(TOKEN_KEY, state.token);
+          setMessage("login-message", "Login successful.");
+          closeModal("auth-modal");
+          renderAccount();
+        });
+
+        document.getElementById("gems-form").addEventListener("submit", (event) => {
+          event.preventDefault();
+          const form = new FormData(event.currentTarget);
+          const db = loadDb();
+          let account = currentAccount();
+
+          if (!account) {
+            const username = String(form.get("username") || "").trim();
+            const email = String(form.get("email") || "").trim().toLowerCase();
+            const password = String(form.get("password") || "");
+            if (username.length < 3 || username.length > 20) {
+              setMessage("gems-message", "Username must be between 3 and 20 characters.", true);
+              return;
+            }
+            if (!email.includes("@")) {
+              setMessage("gems-message", "Enter a valid email address.", true);
+              return;
+            }
+            if (password.length < 6) {
+              setMessage("gems-message", "Password must be at least 6 characters.", true);
+              return;
+            }
+            if (db.accounts.some((entry) => entry.username.toLowerCase() === username.toLowerCase())) {
+              setMessage("gems-message", "That username is already taken.", true);
+              return;
+            }
+            account = {
+              id: makeId("acct"),
+              username,
+              email,
+              password,
+              gemsBalance: 0,
+              createdAt: new Date().toISOString()
+            };
+            db.accounts.push(account);
+            state.token = makeId("user");
+            db.sessions.push({ token: state.token, accountId: account.id });
+            localStorage.setItem(TOKEN_KEY, state.token);
+          }
+
+          const gems = Number(form.get("gems"));
+          if (!Number.isInteger(gems) || gems < 100) {
+            setMessage("gems-message", "Minimum gem order is 100 gems.", true);
+            return;
+          }
+
+          db.gemOrders.push({
+            id: makeId("gems"),
+            accountId: account.id,
+            gems,
+            amountUsd: gems / 100,
+            status: "pending",
+            createdAt: new Date().toISOString()
+          });
+          saveDb(db);
+          setMessage("gems-message", "Gem order saved in this browser. Live fallback: email drdonutiskool@gmail.com with the rank name you want.");
+          event.currentTarget.reset();
+          gemsInput.value = 300;
+          previewCost();
+          renderAccount();
+          renderAdmin();
+        });
+
+        document.getElementById("rank-form").addEventListener("submit", (event) => {
+          event.preventDefault();
+          const account = currentAccount();
+          if (!account) {
+            setMessage("rank-message", "Log in first.", true);
+            return;
+          }
+          const form = new FormData(event.currentTarget);
+          const rank = RANKS.find((entry) => entry.id === form.get("rankId"));
+          if (!rank || rank.id === "member") {
+            setMessage("rank-message", "That rank cannot be purchased.", true);
+            return;
+          }
+          if (account.gemsBalance < rank.gemCost) {
+            setMessage("rank-message", "You do not have enough gems for that rank.", true);
+            return;
+          }
+
+          const db = loadDb();
+          const freshAccount = db.accounts.find((entry) => entry.id === account.id);
+          freshAccount.gemsBalance -= rank.gemCost;
+          db.rankOrders.push({
+            id: makeId("rank"),
+            accountId: freshAccount.id,
+            rankId: rank.id,
+            rankName: rank.name,
+            gemCost: rank.gemCost,
+            status: "pending",
+            minecraftUsername: String(form.get("minecraftUsername") || "").trim(),
+            edition: String(form.get("edition") || "").toLowerCase(),
+            createdAt: new Date().toISOString()
+          });
+          saveDb(db);
+          setMessage("rank-message", "Rank request saved in this browser.");
+          closeModal("rank-modal");
+          renderAccount();
+          renderAdmin();
+        });
+
+        document.getElementById("admin-login-form").addEventListener("submit", (event) => {
+          event.preventDefault();
+          const form = new FormData(event.currentTarget);
+          const username = String(form.get("username") || "").trim();
+          const password = String(form.get("password") || "");
+          if (username !== ADMIN_USERNAME || password !== ADMIN_PASSWORD) {
+            document.getElementById("admin-login-message").textContent = "Invalid admin login.";
+            document.getElementById("admin-login-message").style.color = "var(--danger)";
+            return;
+          }
+          const db = loadDb();
+          state.adminToken = makeId("admin");
+          db.adminSessions.push({ token: state.adminToken });
+          saveDb(db);
+          localStorage.setItem(ADMIN_TOKEN_KEY, state.adminToken);
+          document.getElementById("admin-login-message").textContent = "Admin login successful.";
+          document.getElementById("admin-login-message").style.color = "var(--success)";
+          renderAdmin();
+        });
+      }
+
+      setup();
+    </script>
+  </body>
+  </html>
